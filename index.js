@@ -27,4 +27,4 @@ app.get('/', (req,res) => {
 })
 
 PORT = process.env.PORT
-app.listen(PORT, () => {console.log(`Application is running on ${PORT}!! `)})
+app.listen(PORT || 8080, () => {console.log(`Application is running on ${PORT}!! `)})

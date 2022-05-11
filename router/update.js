@@ -13,9 +13,6 @@ router.post("/update", (req, res) => {
     temp.password = req.body.password;
     temp.email = req.body.email;
     temp.fullname = req.body.fullname;
-    console.log(temp.username);
-    console.log(temp.password);
-    console.log(temp.email);
     const check = db.query(
       `SELECT * FROM users WHERE username = '${temp.username}';`,
       function (err, result) {

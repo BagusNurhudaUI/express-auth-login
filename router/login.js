@@ -16,8 +16,6 @@ router.post("/", (req, res) => {
     temp = req.session;
     temp.username = req.body.username;
     temp.password = req.body.password;
-    console.log(temp.username);
-    console.log(temp.password);
     const query = `SELECT * FROM users WHERE username = '${temp.username}';`;
     db.query(query, (err, results) => {
         
