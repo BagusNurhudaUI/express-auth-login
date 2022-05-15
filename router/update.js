@@ -21,14 +21,14 @@ router.post("/update", (req, res) => {
           res.json({ status: "User already exists" });
         } else {
           console.log("tidak ada");
-          const hashedPassword = bcrypt.hash(
+          await bcrypt.hash(
             temp.password,
             10,
             (err, hashedPassword) => {
               const signup = db.query(
                 `INSERT INTO users(username, fullname, password, email) VALUES('${temp.username}','${temp.fullname}','${hashedPassword}', '${temp.email}');`
               );
-              db.query(signup, (err, results) => {
+              const result = await db.query(signup, (err, results) => {
                 if (err) {
                   console.error(err.detail);
                   res.send(err.detail);

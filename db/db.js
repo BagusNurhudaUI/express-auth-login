@@ -1,16 +1,18 @@
 const { Pool } = require('pg');
 
-const pool = new Pool({
+var config = {
     user: "postgres",
-    host:'34.123.115.142',
-	password: "hudahuda",
-	database: "database1",
+    // host:'34.123.115.142',
+    host: 'localhost',
+    password: "hudahuda",
+    database: "database1",
     port: 5432,
-    ssl:{
-        rejectUnauthorized: false,
-    }
-});
+    // ssl:{
+    //     rejectUnauthorized: false,
+    // }
+}
 
+const pool =  new Pool(config)
 pool.connect((err) =>{
     if (err) {
         console.error(err);

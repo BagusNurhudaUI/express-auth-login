@@ -2,48 +2,47 @@ const express = require('express')
 const router = express.Router()
 const bcrypt = require("bcrypt");
 const db = require('../db/db')
-
+const jwt =require("jsonwebtoken");
+const Helper = require('../controller/helper');
 
 router.get('/',(req, res, next) =>{
     res.send('berhasil masuk login page')
 })
 
-router.post("/", (req, res) => {
-    temp = req.session;
-    temp.username = req.body.username;
+SECRET = process.env.SECRET
+
+
+router.post("/", async (req, res) => {
+    temp = req.body;
+    temp.email = req.body.email;
     temp.password = req.body.password;
-    const query = `SELECT * FROM users WHERE username = '${temp.username}';`;
-    db.query(query, (err, results) => {
-      //jika ada error pada function
-      if (err) {
-        console.error(err);
-        res.send(err);
-        return;
+
+    if (!temp.email|| !temp.password) {
+      return res.status(400).send({'message': 'email and password is provided'});
+    }
+
+    if (!Helper.isValidEmail(req.body.email)) {
+      return res.status(400).send({ 'message': 'Please enter a valid email address' });
+    }
+
+    
+
+    
+    const query = `SELECT * FROM users WHERE email = '${temp.email}';`;
+    try {
+      const { rows } = await db.query(query);
+      if (!rows[0]) {
+        return res.status(400).send({'message': 'The credentials you provided is incorrect'});
       }
-      // jika tidak ada error query
-      if (Array.isArray(results.rows) && results.rows.length) {
-        hashed = results.rows[0].password;
-        bcrypt.compare(temp.password, hashed, (err, result) => {
-          // jika ada error pada compare
-          if (err) {
-            console.log(err);
-            res.send(err);
-            return;
-          } else {
-            // jika hasil compare password benar
-            if (result) {
-            console.log("berhasil login success");
-            return res.redirect('http://localhost:8080/home');
-            // jika hasil compare password salah
-            } else {
-              res.json({ status: "Wrong Password" });
-            }
-          }
-        });
-      } else {
-        res.json({ status: "Wrong Username" });
+      if(!Helper.comparePassword(rows[0].password, temp.password)) {
+        return res.status(400).send({ 'message': 'The credentials you provided is incorrect' });
       }
-    });
+      const token = Helper.generateToken(rows[0].id, rows[0].email);
+      res.cookie('jwt', token);
+      return res.status(200).send({ token });
+    } catch(error) {
+      return res.status(400).send(error)
+    }
   });
 
   module.exports =router;
