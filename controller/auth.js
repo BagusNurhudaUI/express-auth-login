@@ -1,4 +1,3 @@
-
 const jwt = require('jsonwebtoken');
 const db = require('../db/db')
 
@@ -8,11 +7,10 @@ const Auth = {
         const token = req.cookies.jwt;
         
         if (token) {
-            console.log('berhasil masuk token');
             jwt.verify(token, process.env.SECRET, (err, decodedToken) => {
               if (err) {
                 console.log(err.message);
-                
+                res.status(403).send(err.message);
               } else {
                 console.log('berhasil ');
                 console.log(decodedToken);
@@ -25,14 +23,7 @@ const Auth = {
             console.log('cannot loggin');
             res.redirect('/login');
         }
-    // try {
-    //   const decoded = jwt.verify(token, SECRET);
-    //     req.user = decoded;
-    //   console.log('successfully retrieved token');
-    //   next();
-    // } catch(error) {
-    //   return res.status(400).send(error);
-    // }
+    
   }
 }
 

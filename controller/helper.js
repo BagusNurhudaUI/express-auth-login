@@ -23,7 +23,7 @@ const Helper = {
       userId: id,
       email: email
     },
-      SECRET, { expiresIn: '7d' }
+      SECRET, { expiresIn: '10m' }
     )
     console.log(token);
     return token;
