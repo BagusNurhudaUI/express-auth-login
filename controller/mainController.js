@@ -1,17 +1,25 @@
 
 const express = require('express')
 
-const Main = {
 
-    main_get (req, res, next){
-        try {
-            return res.send('Berhasil masuk ke home page')
-        } catch (error) {
-            
-        }
+const main_user = async (req, res, next) => {
+    
+    try {
+        return res.status(200).send(req.objek)
+    } catch (error) {
+        return res.status(400).send(error)
     }
-
-
 }
 
-module.exports = Main.main_get
+const main_mitra = async (req, res, next) => {
+    try {
+        return res.send(`Berhasil masuk ke home page! Role anda adalah mitra`)
+    } catch (error) {
+        return res.status(400).send(error)
+    }
+}
+
+
+module.exports = {
+    main_user, main_mitra
+}
